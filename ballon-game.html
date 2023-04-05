@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ballon Game</title>
+    <style>
+        .gameBox{
+            position: relative;
+            width:700px;
+            height:600px;
+            border:2px solid black;
+        }
+
+        .ballonBox{
+            position: absolute;
+
+        }
+
+        .ballon{
+            position: absolute;
+            object-fit:cover;
+        }
+        .text{
+            position: absolute;
+            top:30px;
+            left:40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="gameBox"> </div>
+    <script>
+        const gameBox=document.querySelector(".gameBox")
+        const imageNames=['ballon6.jpg','ballon7.jpg','ballon8.jpg','ballon9.jpg']
+        const img=new Image(150,150)
+        
+        img.src=`assets/images/${imageNames[0]}`
+        
+        const div=document.createElement('div')
+
+        div.classList.add("ballonBox")
+        img.classList.add("ballon")
+        div.appendChild(img)
+        gameBox.appendChild(div)
+        div.innerHTML+=`<p class="text"> XXXX </p>`
+    </script>
+    
+</body>
+</html>
