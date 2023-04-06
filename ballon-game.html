@@ -8,13 +8,14 @@
     <style>
         .gameBox{
             position: relative;
-            width:700px;
+            width:1200px;
             height:600px;
             border:2px solid black;
         }
 
         .ballonBox{
             position: absolute;
+            
 
         }
 
@@ -24,8 +25,8 @@
         }
         .text{
             position: absolute;
-            top:30px;
-            left:40px;
+            top: 30px;
+            left:45px;
         }
     </style>
 </head>
@@ -34,17 +35,85 @@
     <script>
         const gameBox=document.querySelector(".gameBox")
         const imageNames=['ballon6.jpg','ballon7.jpg','ballon8.jpg','ballon9.jpg']
-        const img=new Image(150,150)
-        
-        img.src=`assets/images/${imageNames[0]}`
-        
-        const div=document.createElement('div')
+        const letters="abcdefghijklmnopqrstuvwxyz"
 
-        div.classList.add("ballonBox")
-        img.classList.add("ballon")
-        div.appendChild(img)
-        gameBox.appendChild(div)
-        div.innerHTML+=`<p class="text"> XXXX </p>`
+        function pickElement(arr){
+            const len=arr.length.toString().length
+            const toMultiply=len>10 ? 100:10
+            const index=Math.round(Math.random()*toMultiply)%arr.length
+            return arr[index]
+
+        }
+        function getRandomInRange(start,stop){
+            const len=(stop-start).toString().length
+            const toMultiply=len>10 ? 100:10
+            const index=Math.round(Math.random()*1000)
+            return start+index
+        }
+        function getWord(maxLength){
+            let res=[]
+            for (let i=0;i<maxLength;i++){
+                res.push(pickElement(letters))
+            }
+            return res.join('')
+
+        }
+        
+        function makeBallon(){
+            const img=new Image(150,150);
+            const imageName=pickElement(imageNames);
+            const x=getRandomInRange(30,500)
+            console.log(x)
+            const y=150
+            
+            
+            img.src=`assets/images/${imageName}`
+            
+            const div=document.createElement('div')
+
+            div.classList.add("ballonBox")
+            img.classList.add("ballon")
+            div.style.left=`${x}px`;
+            div.style.bottom=`${y}px`;
+            div.appendChild(img)
+            gameBox.appendChild(div)
+            const len=Math.round(Math.random()*10)%7
+            const speed=Math.round(Math.random()*10)%60
+
+            const word=getWord(len)
+            div.innerHTML+=`<p class="text"> ${word} </p>`
+
+            return{
+                div,
+                pos:{x,y},
+                speed,
+                word,
+                update(){
+                    this.pos.y+=this.speed
+                    this.render()
+                },
+                render(){
+                    const {x,y}=this.pos
+                    this.div.style.left = `${x}px`
+                    this.div.style.bottom = `${y}px`
+                },
+                blast(){
+                    this.div.remove()
+                }
+            }
+        }
+
+        let ballons=[makeBallon(),makeBallon(),makeBallon()]
+        function mainLoop(){
+            ballons.forEach(b=>b.update())
+            const forBlasting = ballons.filter(b=>b.pos.y>560)
+            ballons= ballons.filter(b=>b.pos.y<=560)
+            forBlasting.forEach(b=>b.blast())
+        }
+        setInterval(mainLoop,100)
+        
+
+        // makeBallon()
     </script>
     
 </body>
